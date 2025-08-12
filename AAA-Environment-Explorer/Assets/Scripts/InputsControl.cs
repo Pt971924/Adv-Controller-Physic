@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class InputsControl : MonoBehaviour
 {
+    [SerializeField] CharacterController playerCharController;
     //Player Input Actions
     InputAction Move;
     InputAction Jump;
@@ -24,6 +25,7 @@ public class InputsControl : MonoBehaviour
         Move.canceled += OnMove;
         Move.Enable();
         Jump.started += OnJump;
+        Jump.performed += OnJump;
         Jump.canceled += OnJump;
         Jump.Enable();
     }
@@ -31,16 +33,18 @@ public class InputsControl : MonoBehaviour
     {
         _moveInput = context.ReadValue<Vector2>();
     }
+    
     void OnJump(InputAction.CallbackContext context)
     {
         _jumpAmount = context.ReadValue<float>();
-        if (_jumpAmount>0f)
+
+        if(_jumpAmount >0.1f)
         {
             _jump = true;
         }
-        else if(_jumpAmount==0f)
+        else if( _jumpAmount == 0f)
         {
-            _jump = false;
+            _jump =false;
         }
     }
     private void OnDisable()
@@ -49,6 +53,7 @@ public class InputsControl : MonoBehaviour
         Move.canceled -= OnMove;
         Move.Disable();
         Jump.started -= OnJump;
+        Jump.performed -= OnJump;
         Jump.canceled -= OnJump;
         Jump.Disable();
     }
